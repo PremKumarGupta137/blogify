@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="/">Blogify</a>
+
+    <!-- Toggler -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ms-auto">
+        <!-- Home -->
+        <li class="nav-item">
+          <a class="nav-link <%= (active === 'home') ? 'active' : '' %>" href="/">Home</a>
+        </li>
+
+        <% if (locals.user) { %>
+          <!-- Add Blog -->
+          <li class="nav-item">
+            <a class="nav-link <%= (active === 'add-blog') ? 'active' : '' %>" href="/blog/add-new">Add Blog</a>
+          </li>
+
+          <!-- User Dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle d-flex align-items-center"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <% if (locals.user.profileImageURL) { %>
+                <img src="<%= locals.user.profileImageURL %>" alt="Profile" class="rounded-circle me-2" style="width:30px; height:30px; object-fit:cover;">
+              <% } %>
+              <%= locals.user.fullName %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="/user/logout">Logout</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <!-- Authentication Links -->
+          <li class="nav-item">
+            <a class="nav-link <%= (active === 'signup') ? 'active' : '' %>" href="/user/signup">Create Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= (active === 'signin') ? 'active' : '' %>" href="/user/signin">Signin</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Error Alert -->
+<% if (locals.error) { %>
+  <div class="container mt-4">
+    <div class="alert alert-danger" role="alert"><%= locals.error %></div>
+  </div>
+<% } %>
