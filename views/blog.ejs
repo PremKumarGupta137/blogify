@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+    <title><%= blog.title %> — Blogify</title>
+  </head>
+  <body>
+    <%- include('partials/nav') %>
+
+    <div class="container mt-4" style="max-width: 760px;">
+      <% if (blog.coverImageURL) { %>
+        <img src="<%= blog.coverImageURL %>" class="blog-hero-cover" alt="<%= blog.title %>" />
+      <% } %>
+
+      <h1 class="blog-title"><%= blog.title %></h1>
+      <p class="blog-meta">
+        <%= new Date(blog.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+      </p>
+
+      <div class="blog-body"><%= blog.body %></div>
+
+      <% if (blog.createdBy) { %>
+        <div class="author-card d-flex align-items-center gap-2 mb-4">
+          <img src="<%= blog.createdBy.profileImageURL %>" width="42" height="42" class="rounded-circle" style="object-fit:cover;" />
+          <span>Written by <strong><%= blog.createdBy.fullName %></strong></span>
+        </div>
+      <% } %>
+
+      <hr class="my-4" />
+
+      <h2 class="h4 mb-3">Comments (<%= comments ? comments.length : 0 %>)</h2>
+
+      <% if (locals.user) { %>
+        <form action="/blog/comment/<%= blog._id %>" method="post" class="mb-4">
+          <div class="d-flex gap-2">
+            <input type="text" name="content" class="form-control" placeholder="Add a comment…" required />
+            <button class="btn btn-primary" type="submit">Post</button>
+          </div>
+        </form>
+      <% } else { %>
+        <p class="blog-meta mb-4"><a href="/user/signin">Sign in</a> to join the conversation.</p>
+      <% } %>
+
+      <div class="mb-5">
+        <% if (comments && comments.length > 0) { %>
+          <% comments.forEach(comment => { %>
+            <div class="comment-card border p-3 mb-2">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <img src="<%= comment.createdBy ? comment.createdBy.profileImageURL : '/images/default.png' %>" width="34" height="34" class="rounded-circle" style="object-fit:cover;" />
+                <strong><%= comment.createdBy ? comment.createdBy.fullName : 'Deleted user' %></strong>
+              </div>
+              <pre><%= comment.content %></pre>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="blog-meta">No comments yet — be the first to share your thoughts.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/scripts') %>
+  </body>
+</html>

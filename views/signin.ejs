@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+    <title>Sign in — Blogify</title>
+  </head>
+  <body>
+    <%- include('partials/nav') %>
+
+    <div class="container">
+      <div class="form-card">
+        <h1 class="h3 mb-4">Welcome back</h1>
+        <form action="/user/signin" method="post">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" id="email" required autofocus />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="password" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Sign in</button>
+        </form>
+        <p class="blog-meta mt-3 mb-0">
+          Don't have an account? <a href="/user/signup">Create one</a>
+        </p>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/scripts') %>
+  </body>
+</html>

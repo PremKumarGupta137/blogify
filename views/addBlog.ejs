@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+    <title>Write a post — Blogify</title>
+  </head>
+  <body>
+    <%- include('partials/nav') %>
+
+    <div class="container">
+      <div class="form-card" style="max-width: 640px;">
+        <h1 class="h3 mb-4">Write a new post</h1>
+        <form action="/blog" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="coverImage" class="form-label">Cover image <span class="blog-meta">(optional)</span></label>
+            <input type="file" class="form-control" id="coverImage" name="coverImage" accept="image/*" />
+          </div>
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required />
+          </div>
+          <div class="mb-3">
+            <label for="body" class="form-label">Body</label>
+            <textarea name="body" class="form-control" id="body" rows="10" required></textarea>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Publish</button>
+        </form>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/scripts') %>
+  </body>
+</html>

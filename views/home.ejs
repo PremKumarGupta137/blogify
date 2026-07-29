@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('partials/head') %>
+    <title>Blogify — Home</title>
+</head>
+
+<body>
+  <%- include('partials/nav') %>
+
+    <div class="container page-header">
+      <h1>Latest posts</h1>
+      <p>Thoughts, stories and ideas from the Blogify community.</p>
+    </div>
+
+    <div class="container pb-5">
+      <% if (blogs.length===0) { %>
+        <div class="empty-state">
+          <p>No posts yet. Be the first to write one.</p>
+          <% if (locals.user) { %>
+            <a href="/blog/add-new" class="btn btn-primary">Write a post</a>
+          <% } %>
+        </div>
+      <% } else { %>
+        <div class="blog-grid">
+          <% blogs.forEach(blog=> { %>
+            <div class="blog-card">
+              <a href="/blog/<%= blog._id %>" class="cover-wrap">
+                <% if (blog.coverImageURL) { %>
+                  <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>" />
+                <% } %>
+              </a>
+              <div class="card-body">
+                <h2><a href="/blog/<%= blog._id %>"><%= blog.title %></a></h2>
+                <p><%= blog.body.substring(0, 100) %><%= blog.body.length > 100 ? '…' : '' %></p>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/scripts') %>
+</body>
+
+</html>

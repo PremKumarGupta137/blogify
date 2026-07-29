@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+    <title>Create account — Blogify</title>
+  </head>
+  <body>
+    <%- include('partials/nav') %>
+
+    <div class="container">
+      <div class="form-card">
+        <h1 class="h3 mb-4">Create your account</h1>
+        <form action="/user/signup" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full name</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" required />
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" name="email" class="form-control" id="email" required />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="password" required minlength="6" />
+          </div>
+          <div class="mb-3">
+            <label for="profileImage" class="form-label">Profile photo <span class="blog-meta">(optional)</span></label>
+            <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*" />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Sign up</button>
+        </form>
+        <p class="blog-meta mt-3 mb-0">
+          Already have an account? <a href="/user/signin">Sign in</a>
+        </p>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/scripts') %>
+  </body>
+</html>
