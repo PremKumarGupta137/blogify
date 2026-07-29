@@ -3,7 +3,7 @@ services:
     name: blogify
     runtime: node
     plan: free
-    buildCommand: npm install --include=dev
+    buildCommand: npm install
     startCommand: npm run start
     healthCheckPath: /
     envVars:
