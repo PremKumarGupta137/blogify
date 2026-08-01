@@ -2,6 +2,7 @@ const { Router } = require("express");
 const multer = require("multer");
 const User = require("../models/user");
 const { uploadBufferToCloudinary } = require("../services/cloudinary");
+const { createTokenForUser } = require("../services/authentication");
 
 const router = Router();
 
@@ -56,6 +57,45 @@ router.post("/signin", async (req, res) => {
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token").redirect("/");
+});
+
+// Edit profile (name + photo)
+router.get("/edit", async (req, res) => {
+  if (!req.user) return res.redirect("/user/signin");
+
+  const user = await User.findById(req.user._id);
+  res.render("editProfile", { active: "", profile: user });
+});
+
+router.post("/edit", upload.single("profileImage"), async (req, res) => {
+  if (!req.user) return res.redirect("/user/signin");
+
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.redirect("/user/signin");
+
+    const { fullName } = req.body;
+    if (!fullName) {
+      return res.render("editProfile", { active: "", profile: user, error: "Full name is required." });
+    }
+
+    if (req.file) {
+      const result = await uploadBufferToCloudinary(req.file.buffer, "blogify/profiles");
+      user.profileImageURL = result.secure_url;
+    }
+
+    user.fullName = fullName;
+    await user.save();
+
+    // Re-issue the token so the new name/photo show up immediately (they're baked into the JWT).
+    const token = createTokenForUser(user);
+    res
+      .cookie("token", token, { httpOnly: true })
+      .redirect(`/user/edit?msg=${encodeURIComponent("Profile updated.")}`);
+  } catch (err) {
+    console.error(err);
+    res.render("editProfile", { active: "", profile: req.user, error: "Update failed. Please try again." });
+  }
 });
 
 module.exports = router;

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+    <title>Edit profile — Blogify</title>
+  </head>
+  <body>
+    <%- include('partials/nav') %>
+
+    <div class="container">
+      <div class="form-card fade-in">
+        <h1 class="h3 mb-4">Edit your profile</h1>
+
+        <% if (locals.flash) { %>
+          <div class="alert alert-success" role="alert"><%= flash %></div>
+        <% } %>
+        <% if (locals.error) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+        <% } %>
+
+        <form action="/user/edit" method="post" enctype="multipart/form-data">
+          <div class="mb-3 d-flex align-items-center gap-3">
+            <img src="<%= profile.profileImageURL %>" alt="Current photo" class="rounded-circle" width="64" height="64" style="object-fit:cover;" />
+            <div class="flex-grow-1">
+              <label for="profileImage" class="form-label mb-1">Profile photo <span class="blog-meta">(optional — leave empty to keep current)</span></label>
+              <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*" />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Full name</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" value="<%= profile.fullName %>" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Save changes</button>
+        </form>
+      </div>
+    </div>
+
+    <%- include('partials/footer') %>
+    <%- include('partials/scripts') %>
+  </body>
+</html>
