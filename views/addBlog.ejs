@@ -2,28 +2,46 @@
 <html lang="en">
   <head>
     <%- include('partials/head') %>
-    <title>Write a post — Blogify</title>
+    <title><%= blog ? 'Edit post' : 'Write a post' %> — Blogify</title>
   </head>
   <body>
     <%- include('partials/nav') %>
 
     <div class="container">
-      <div class="form-card" style="max-width: 640px;">
-        <h1 class="h3 mb-4">Write a new post</h1>
-        <form action="/blog" method="post" enctype="multipart/form-data">
+      <div class="form-card fade-in" style="max-width: 640px;">
+        <h1 class="h3 mb-4"><%= blog ? 'Edit post' : 'Write a new post' %></h1>
+        <% if (locals.error) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+        <% } %>
+        <form action="<%= blog ? `/blog/edit/${blog._id}` : '/blog' %>" method="post" enctype="multipart/form-data">
+          <% if (blog && blog.coverImageURL) { %>
+            <div class="mb-3">
+              <label class="form-label">Current cover</label>
+              <img src="<%= blog.coverImageURL %>" class="current-cover-preview" alt="Current cover" />
+            </div>
+          <% } %>
           <div class="mb-3">
-            <label for="coverImage" class="form-label">Cover image <span class="blog-meta">(optional)</span></label>
+            <label for="coverImage" class="form-label">Cover image <span class="blog-meta">(optional<%= blog ? ' — leave empty to keep current' : '' %>)</span></label>
             <input type="file" class="form-control" id="coverImage" name="coverImage" accept="image/*" />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required />
+            <input type="text" class="form-control" id="title" name="title" value="<%= blog ? blog.title : '' %>" required />
+          </div>
+          <div class="mb-3">
+            <label for="tags" class="form-label">Tags <span class="blog-meta">(comma-separated, optional)</span></label>
+            <input type="text" class="form-control" id="tags" name="tags" placeholder="javascript, career, notes" value="<%= blog && blog.tags ? blog.tags.join(', ') : '' %>" />
           </div>
           <div class="mb-3">
             <label for="body" class="form-label">Body</label>
-            <textarea name="body" class="form-control" id="body" rows="10" required></textarea>
+            <textarea name="body" class="form-control" id="body" rows="12" required><%= blog ? blog.body : '' %></textarea>
           </div>
-          <button class="btn btn-primary w-100" type="submit">Publish</button>
+          <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary flex-fill" type="submit" name="status" value="draft">Save as draft</button>
+            <button class="btn btn-primary flex-fill" type="submit" name="status" value="published">
+              <%= blog && blog.status === 'published' ? 'Update & publish' : 'Publish' %>
+            </button>
+          </div>
         </form>
       </div>
     </div>

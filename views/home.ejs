@@ -9,23 +9,48 @@
 <body>
   <%- include('partials/nav') %>
 
-    <div class="container page-header">
+    <div class="container page-header fade-in">
       <h1>Latest posts</h1>
       <p>Thoughts, stories and ideas from the Blogify community.</p>
+
+      <form action="/" method="get" class="search-bar mt-3">
+        <input type="search" name="q" class="form-control" placeholder="Search posts…" value="<%= q || '' %>" />
+        <% if (activeTag) { %><input type="hidden" name="tag" value="<%= activeTag %>" /><% } %>
+        <button class="btn btn-primary" type="submit">Search</button>
+      </form>
+
+      <% if (tags && tags.length) { %>
+        <div class="tag-pills mt-3">
+          <a href="/<%= q ? `?q=${encodeURIComponent(q)}` : '' %>" class="tag-pill <%= !activeTag ? 'tag-pill-active' : '' %>">All</a>
+          <% tags.forEach(tag => { %>
+            <a href="/?tag=<%= encodeURIComponent(tag) %><%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="tag-pill <%= activeTag === tag ? 'tag-pill-active' : '' %>"><%= tag %></a>
+          <% }) %>
+        </div>
+      <% } %>
     </div>
 
     <div class="container pb-5">
+      <% if (locals.flash) { %>
+        <div class="alert alert-success fade-in" role="alert"><%= flash %></div>
+      <% } %>
+
       <% if (blogs.length===0) { %>
-        <div class="empty-state">
-          <p>No posts yet. Be the first to write one.</p>
-          <% if (locals.user) { %>
-            <a href="/blog/add-new" class="btn btn-primary">Write a post</a>
+        <div class="empty-state fade-in">
+          <% if (q || activeTag) { %>
+            <p>No posts match your search.</p>
+            <a href="/" class="btn btn-outline-secondary">Clear filters</a>
+          <% } else { %>
+            <p>No posts yet. Be the first to write one.</p>
+            <% if (locals.user && locals.user.role === 'ADMIN') { %>
+              <a href="/blog/add-new" class="btn btn-primary">Write a post</a>
+            <% } %>
           <% } %>
         </div>
       <% } else { %>
         <div class="blog-grid">
-          <% blogs.forEach(blog=> { %>
-            <div class="blog-card">
+          <% blogs.forEach((blog, i)=> { %>
+            <div class="blog-card fade-in-stagger" style="animation-delay: <%= Math.min(i, 8) * 0.06 %>s">
+              <% if (blog.status === 'draft') { %><span class="draft-badge">Draft</span><% } %>
               <a href="/blog/<%= blog._id %>" class="cover-wrap">
                 <% if (blog.coverImageURL) { %>
                   <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>" />
@@ -34,6 +59,16 @@
               <div class="card-body">
                 <h2><a href="/blog/<%= blog._id %>"><%= blog.title %></a></h2>
                 <p><%= blog.body.substring(0, 100) %><%= blog.body.length > 100 ? '…' : '' %></p>
+                <% if (blog.tags && blog.tags.length) { %>
+                  <div class="tag-pills tag-pills-sm">
+                    <% blog.tags.slice(0, 3).forEach(tag => { %>
+                      <a href="/?tag=<%= encodeURIComponent(tag) %>" class="tag-pill"><%= tag %></a>
+                    <% }) %>
+                  </div>
+                <% } %>
+                <p class="card-meta blog-meta">
+                  <%= estimateReadingTime(blog.body) %> min read &middot; <%= blog.views %> view<%= blog.views === 1 ? '' : 's' %>
+                </p>
               </div>
             </div>
           <% }) %>

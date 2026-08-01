@@ -25,10 +25,12 @@
         </li>
 
         <% if (locals.user) { %>
-          <!-- Add Blog -->
-          <li class="nav-item">
-            <a class="nav-link <%= (active === 'add-blog') ? 'active' : '' %>" href="/blog/add-new">Add Blog</a>
-          </li>
+          <% if (locals.user.role === 'ADMIN') { %>
+            <!-- Add Blog -->
+            <li class="nav-item">
+              <a class="nav-link <%= (active === 'add-blog') ? 'active' : '' %>" href="/blog/add-new">Add Blog</a>
+            </li>
+          <% } %>
 
           <!-- User Dropdown -->
           <li class="nav-item dropdown">

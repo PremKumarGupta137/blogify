@@ -7,8 +7,8 @@
   <body>
     <%- include('partials/nav') %>
 
-    <div class="container status-page">
-      <div class="code">500</div>
+    <div class="container status-page fade-in">
+      <div class="code"><%= locals.code || 500 %></div>
       <p><%= message %></p>
       <a href="/" class="btn btn-primary">Back to home</a>
     </div>

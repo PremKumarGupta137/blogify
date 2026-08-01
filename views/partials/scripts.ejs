@@ -1,3 +1,37 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
     crossorigin="anonymous"></script>
+<script>
+  (function () {
+    var overlay = document.getElementById("confirmOverlay");
+    if (!overlay) return;
+
+    var text = document.getElementById("confirmText");
+    var form = document.getElementById("confirmForm");
+    var cancelBtn = document.getElementById("confirmCancel");
+
+    function open(trigger) {
+      text.textContent = trigger.getAttribute("data-confirm-text") || "Are you sure?";
+      form.setAttribute("action", trigger.getAttribute("data-form-action"));
+      overlay.classList.add("is-open");
+    }
+
+    function close() {
+      overlay.classList.remove("is-open");
+    }
+
+    document.querySelectorAll("[data-confirm-delete]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        open(btn);
+      });
+    });
+
+    cancelBtn.addEventListener("click", close);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>
